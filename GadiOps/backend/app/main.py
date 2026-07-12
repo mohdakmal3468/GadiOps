@@ -4,6 +4,10 @@ from fastapi.staticfiles import StaticFiles
 from app.core.database import engine, Base
 # Add this import near the top of backend/app/main.py
 from app.routers import auth
+# Import the vehicle routing module
+from app.routers import vehicles
+# Import the driver routing module
+from app.routers import drivers
 
 
 # Create database tables automatically on startup (No need for heavy migrations like Alembic during a hackathon)
@@ -46,3 +50,8 @@ def health_check():
 app.include_router(auth.router, prefix="/api")
 # Always place this at the bottom so it doesn't hijack API route matching
 app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
+# Mount inside the FastAPI instance structure
+app.include_router(vehicles.router, prefix="/api")
+
+# Mount inside the FastAPI instance structure
+app.include_router(drivers.router, prefix="/api")
