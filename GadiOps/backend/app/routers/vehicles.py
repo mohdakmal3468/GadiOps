@@ -108,4 +108,5 @@ def delete_vehicle(
         
     db.delete(vehicle)
     db.commit()
+    db.refresh(vehicle)
     return None

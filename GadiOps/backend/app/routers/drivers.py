@@ -103,4 +103,5 @@ def delete_driver(
         
     db.delete(driver)
     db.commit()
+    db.refresh(driver)
     return None

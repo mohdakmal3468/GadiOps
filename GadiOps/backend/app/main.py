@@ -18,6 +18,7 @@ from app.routers import dashboard
 from fastapi import FastAPI
 from app.core.database import engine, Base
 import app.models  # Registers your newly cleaned models directory layout
+import os
 
 app = FastAPI(title="GadiOps API")
 
@@ -64,7 +65,10 @@ def health_check():
 # Register the router inside backend/app/main.py (uncomment or add line)
 app.include_router(auth.router, prefix="/api")
 # Always place this at the bottom so it doesn't hijack API route matching
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="frontend")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # points to backend/
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend"))
+
+app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
 # Mount inside the FastAPI instance structure
 app.include_router(vehicles.router, prefix="/api")
 
