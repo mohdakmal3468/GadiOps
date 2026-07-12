@@ -7,157 +7,371 @@
 checkAuth();
 
 /* =========================================
-   Demo Dashboard Data
+   Dashboard Data
 ========================================= */
 
-let dashboardData = {
+let dashboardData = {};
+
+const demoDashboardData = {
+
     activeVehicles: 48,
+
     availableVehicles: 30,
+
     maintenanceVehicles: 5,
+
     driversOnDuty: 26,
+
     activeTrips: 18,
+
     pendingTrips: 6,
+
     fleetUtilization: 62
+
 };
 
+let fleetChart = null;
+
 /* =========================================
-   Load Dashboard
+   Initialize
 ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
-    loadDashboard();
+    initializeDarkMode();
 
-    document
-        .getElementById("regionFilter")
-        .addEventListener("change", applyFilters);
+    setupRoleUI();
 
-    document
-        .getElementById("statusFilter")
-        .addEventListener("change", applyFilters);
+    setupDownloadButton();
+
+    await fetchDashboard();
+
+    const regionFilter =
+        document.getElementById("regionFilter");
+
+    const statusFilter =
+        document.getElementById("statusFilter");
+
+    if(regionFilter){
+
+        regionFilter.addEventListener(
+            "change",
+            fetchDashboard
+        );
+
+    }
+
+    if(statusFilter){
+
+        statusFilter.addEventListener(
+            "change",
+            fetchDashboard
+        );
+
+    }
 
 });
 
 /* =========================================
-   Display KPI Cards
+   Dashboard API
 ========================================= */
 
-function loadDashboard() {
+async function fetchDashboard(){
 
-    document.getElementById("activeVehicles").textContent =
-        dashboardData.activeVehicles;
+    try{
 
-    document.getElementById("availableVehicles").textContent =
-        dashboardData.availableVehicles;
+        /*
+        dashboardData = await API.get("/dashboard");
+        */
 
-    document.getElementById("maintenanceVehicles").textContent =
-        dashboardData.maintenanceVehicles;
+        dashboardData = demoDashboardData;
 
-    document.getElementById("driversOnDuty").textContent =
-        dashboardData.driversOnDuty;
+        updateDashboard();
 
-    document.getElementById("activeTrips").textContent =
-        dashboardData.activeTrips;
+    }
 
-    document.getElementById("pendingTrips").textContent =
-        dashboardData.pendingTrips;
+    catch(error){
 
-    document.getElementById("fleetUtilization").textContent =
-        dashboardData.fleetUtilization + "%";
+        console.error(error);
+
+        dashboardData = demoDashboardData;
+
+        updateDashboard();
+
+    }
+
+}
+
+/* =========================================
+   KPI
+========================================= */
+
+function updateDashboard(){
+
+    setValue(
+        "activeVehicles",
+        dashboardData.activeVehicles
+    );
+
+    setValue(
+        "availableVehicles",
+        dashboardData.availableVehicles
+    );
+
+    setValue(
+        "maintenanceVehicles",
+        dashboardData.maintenanceVehicles
+    );
+
+    setValue(
+        "driversOnDuty",
+        dashboardData.driversOnDuty
+    );
+
+    setValue(
+        "activeTrips",
+        dashboardData.activeTrips
+    );
+
+    setValue(
+        "pendingTrips",
+        dashboardData.pendingTrips
+    );
+
+    setValue(
+        "fleetUtilization",
+        dashboardData.fleetUtilization + "%"
+    );
 
     drawChart();
 
 }
 
-/* =========================================
-   Filters (Demo)
-========================================= */
+function setValue(id,value){
 
-function applyFilters() {
+    const element =
+        document.getElementById(id);
 
-    const region = document.getElementById("regionFilter").value;
-    const status = document.getElementById("statusFilter").value;
+    if(element){
 
-    console.log("Region:", region);
-    console.log("Status:", status);
+        element.textContent=value;
 
-    /*
-    Backend Integration
-
-    const data = await API.get(
-        `/dashboard?region=${region}&status=${status}`
-    );
-
-    dashboardData = data;
-
-    loadDashboard();
-    */
+    }
 
 }
 
 /* =========================================
-   Fleet Chart
+   Chart
 ========================================= */
 
-let fleetChart;
+function drawChart(){
 
-function drawChart() {
+    const canvas =
+        document.getElementById("fleetChart");
 
-    const ctx = document
-        .getElementById("fleetChart")
-        .getContext("2d");
+    if(!canvas) return;
 
-    if (fleetChart) {
+    if(fleetChart){
+
         fleetChart.destroy();
+
     }
 
-    fleetChart = new Chart(ctx, {
+    fleetChart =
+        new Chart(canvas,{
 
-        type: "doughnut",
+        type:"doughnut",
 
-        data: {
+        data:{
 
-            labels: [
+            labels:[
 
                 "Available",
-                "On Trip",
+
+                "Active",
+
                 "Maintenance"
 
             ],
 
-            datasets: [
+            datasets:[{
 
-                {
+                data:[
 
-                    data: [
+                    dashboardData.availableVehicles,
 
-                        dashboardData.availableVehicles,
-                        dashboardData.activeTrips,
-                        dashboardData.maintenanceVehicles
+                    dashboardData.activeTrips,
 
-                    ]
+                    dashboardData.maintenanceVehicles
 
-                }
+                ]
 
-            ]
+            }]
 
         },
 
-        options: {
+        options:{
 
-            responsive: true,
+            responsive:true,
 
-            maintainAspectRatio: false,
+            plugins:{
 
-            plugins: {
+                legend:{
 
-                legend: {
-
-                    position: "bottom"
+                    position:"bottom"
 
                 }
 
             }
+
+        }
+
+    });
+
+}
+
+/* =========================================
+   CSV
+========================================= */
+
+function setupDownloadButton(){
+
+    const button =
+        document.getElementById("downloadReport");
+
+    if(!button) return;
+
+    button.addEventListener("click",()=>{
+
+        /*
+        Backend
+
+        window.location.href=
+        API_BASE_URL+"/analytics/export";
+        */
+
+        const csv =
+
+`Metric,Value
+Active Vehicles,${dashboardData.activeVehicles}
+Available Vehicles,${dashboardData.availableVehicles}
+Maintenance,${dashboardData.maintenanceVehicles}
+Drivers On Duty,${dashboardData.driversOnDuty}
+Active Trips,${dashboardData.activeTrips}
+Fleet Utilization,${dashboardData.fleetUtilization}%`;
+
+        const blob =
+            new Blob([csv],{
+
+                type:"text/csv"
+
+            });
+
+        const link =
+            document.createElement("a");
+
+        link.href =
+            URL.createObjectURL(blob);
+
+        link.download =
+            "dashboard-report.csv";
+
+        link.click();
+
+    });
+
+}
+
+/* =========================================
+   Role Based UI
+========================================= */
+
+function setupRoleUI(){
+
+    const role =
+        localStorage.getItem("role");
+
+    const financial =
+        document.getElementById(
+            "financialSection"
+        );
+
+    const driver =
+        document.getElementById(
+            "driverPanel"
+        );
+
+    if(role==="Driver"){
+
+        if(financial){
+
+            financial.style.display="none";
+
+        }
+
+    }
+
+    if(role==="Financial Analyst"){
+
+        if(driver){
+
+            driver.style.display="none";
+
+        }
+
+    }
+
+}
+
+/* =========================================
+   Dark Mode
+========================================= */
+
+function initializeDarkMode(){
+
+    const button =
+        document.getElementById(
+            "darkToggle"
+        );
+
+    if(
+
+        localStorage.getItem("theme")
+        ==="dark"
+
+    ){
+
+        document.body.classList.add("dark");
+
+    }
+
+    if(!button) return;
+
+    button.addEventListener("click",()=>{
+
+        document.body.classList.toggle("dark");
+
+        if(
+
+            document.body.classList.contains(
+                "dark"
+            )
+
+        ){
+
+            localStorage.setItem(
+                "theme",
+                "dark"
+            );
+
+        }
+
+        else{
+
+            localStorage.setItem(
+                "theme",
+                "light"
+            );
 
         }
 

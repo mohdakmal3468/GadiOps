@@ -1600,3 +1600,73 @@ tr:hover{
     }
 
 }
+
+/* ==========================================
+   Sidebar Layout
+========================================== */
+
+.sidebar{
+
+    display:flex;
+
+    flex-direction:column;
+
+    min-height:100vh;
+
+}
+
+.sidebar nav{
+
+    flex:1;
+
+}
+
+/* ==========================================
+   Sidebar Footer
+========================================== */
+
+.sidebar-footer{
+
+    margin-top:auto;
+
+    padding:20px;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+}
+
+/* ==========================================
+   Dark Mode Button
+========================================== */
+
+.dark-toggle-btn{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#374151;
+
+    color:#ffffff;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.dark-toggle-btn:hover{
+
+    background:#2563eb;
+
+    transform:translateY(-2px);
+
+}

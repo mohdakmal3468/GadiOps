@@ -4,86 +4,112 @@
 =========================================
 */
 
-// Redirect if already logged in (Only on login page)
+/* =========================================
+   Login Redirect
+========================================= */
+
 if (
+
     window.location.pathname.includes("login.html") &&
+
     localStorage.getItem("token")
-) {
-    window.location.href = "dashboard.html";
+
+){
+
+    window.location.href="dashboard.html";
+
 }
 
-// Get Elements
-const loginForm = document.getElementById("loginForm");
-const loginBtn = document.getElementById("loginBtn");
-const errorMessage = document.getElementById("errorMessage");
+/* =========================================
+   Login
+========================================= */
 
-// Only run login logic if login page exists
-if (loginForm) {
+const loginForm =
+    document.getElementById("loginForm");
 
-    loginForm.addEventListener("submit", async function (e) {
+if(loginForm){
 
-        e.preventDefault();
+    loginForm.addEventListener(
 
-        errorMessage.textContent = "";
+        "submit",
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
+        login
 
-        if (!email || !password) {
+    );
 
-            errorMessage.textContent = "Please enter email and password.";
+}
 
-            return;
-        }
+async function login(event){
 
-        loginBtn.disabled = true;
-        loginBtn.textContent = "Signing In...";
+    event.preventDefault();
 
-        try {
+    const email =
+        document.getElementById("email").value;
 
-            /**********************************************
-             DEMO LOGIN
-             Replace with backend later
-            **********************************************/
+    const password =
+        document.getElementById("password").value;
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
+    try{
 
-            localStorage.setItem("token", "demo-jwt-token");
-            localStorage.setItem("role", "Fleet Manager");
-            localStorage.setItem("username", "Demo User");
+        /*
+        Backend
 
-            /*
-            const response = await API.post("/auth/login", {
+        const response =
+            await API.post("/auth/login",{
+
                 email,
+
                 password
+
             });
 
-            localStorage.setItem("token", response.access_token);
-            localStorage.setItem("role", response.role);
-            localStorage.setItem("username", response.name);
-            */
+        */
 
-            window.location.href = "dashboard.html";
+        const response={
 
-        }
+            access_token:"demo-token",
 
-        catch (error) {
+            role:"Fleet Manager",
 
-            console.error(error);
+            name:"Demo User"
 
-            errorMessage.textContent =
-                error.message || "Invalid email or password.";
+        };
 
-        }
+        localStorage.setItem(
 
-        finally {
+            "token",
 
-            loginBtn.disabled = false;
-            loginBtn.textContent = "Login";
+            response.access_token
 
-        }
+        );
 
-    });
+        localStorage.setItem(
+
+            "role",
+
+            response.role
+
+        );
+
+        localStorage.setItem(
+
+            "username",
+
+            response.name
+
+        );
+
+        window.location.href="dashboard.html";
+
+    }
+
+    catch(error){
+
+        alert("Login Failed");
+
+        console.error(error);
+
+    }
 
 }
 
@@ -91,13 +117,93 @@ if (loginForm) {
    Route Guard
 ========================================= */
 
-function checkAuth() {
+function checkAuth(){
 
-    const token = localStorage.getItem("token");
+    if(
 
-    if (!token) {
+        !localStorage.getItem("token")
 
-        window.location.href = "login.html";
+    ){
+
+        window.location.href="login.html";
+
+    }
+
+    applyRoleVisibility();
+
+    applyTheme();
+
+}
+
+/* =========================================
+   Role UI
+========================================= */
+
+function applyRoleVisibility(){
+
+    const role=
+
+        localStorage.getItem("role");
+
+    const financial=
+
+        document.getElementById(
+
+            "financialSection"
+
+        );
+
+    const driver=
+
+        document.getElementById(
+
+            "driverPanel"
+
+        );
+
+    if(
+
+        role==="Driver"
+
+    ){
+
+        if(financial){
+
+            financial.style.display="none";
+
+        }
+
+    }
+
+    if(
+
+        role==="Financial Analyst"
+
+    ){
+
+        if(driver){
+
+            driver.style.display="none";
+
+        }
+
+    }
+
+}
+
+/* =========================================
+   Theme
+========================================= */
+
+function applyTheme(){
+
+    if(
+
+        localStorage.getItem("theme")==="dark"
+
+    ){
+
+        document.body.classList.add("dark");
 
     }
 
@@ -107,12 +213,10 @@ function checkAuth() {
    Logout
 ========================================= */
 
-function logout() {
+function logout(){
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("username");
+    localStorage.clear();
 
-    window.location.href = "login.html";
+    window.location.href="login.html";
 
 }
