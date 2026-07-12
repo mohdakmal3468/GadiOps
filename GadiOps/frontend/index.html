@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>GadiOps | Smart Fleet Management</title>
+
+    <link rel="stylesheet"
+          href="assets/css/styles.css">
+
+    <link rel="stylesheet"
+          href="assets/css/dark-mode.css">
+
+</head>
+
+<body class="landing-page">
+
+    <div class="landing-container">
+
+        <div class="landing-card">
+
+            <div class="landing-logo">
+
+                🚛
+
+            </div>
+
+            <h1>
+
+                GadiOps
+
+            </h1>
+
+            <p>
+
+                Smart Transport Operations Platform
+
+            </p>
+
+            <p class="landing-description">
+
+                Fleet Management • Driver Registry •
+                Trip Dispatch • Expense Tracking •
+                Analytics Dashboard
+
+            </p>
+
+            <div class="landing-buttons">
+
+                <a
+                    href="templates/login.html"
+                    class="primary-btn">
+
+                    Login
+
+                </a>
+
+                <button
+                    id="darkToggle"
+                    class="secondary-btn">
+
+                    🌙 Dark Mode
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        const toggle =
+            document.getElementById("darkToggle");
+
+        toggle.addEventListener("click", () => {
+
+            document.body.classList.toggle("dark");
+
+        });
+
+    </script>
+
+</body>
+
+</html>
