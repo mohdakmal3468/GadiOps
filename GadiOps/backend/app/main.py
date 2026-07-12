@@ -9,6 +9,8 @@ from app.routers import vehicles
 # Import the driver routing module
 from app.routers import drivers
 
+from app.routers import trips
+
 
 # Create database tables automatically on startup (No need for heavy migrations like Alembic during a hackathon)
 Base.metadata.create_all(bind=engine)
@@ -55,3 +57,5 @@ app.include_router(vehicles.router, prefix="/api")
 
 # Mount inside the FastAPI instance structure
 app.include_router(drivers.router, prefix="/api")
+
+app.include_router(trips.router, prefix="/api")
