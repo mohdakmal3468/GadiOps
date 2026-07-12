@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>GadiOps | Vehicle Registry</title>
+
+    <link rel="stylesheet"
+          href="../assets/css/styles.css">
+
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+
+            <h2>🚛 GadiOps</h2>
+
+        </div>
+
+        <nav>
+
+            <a href="dashboard.html">🏠 Dashboard</a>
+
+            <a href="vehicles.html" class="active">🚛 Vehicles</a>
+
+            <a href="drivers.html">👨 Drivers</a>
+
+            <a href="trips.html">🛣 Trips</a>
+
+            <a href="expenses.html">💰 Expenses</a>
+
+        </nav>
+
+    </aside>
+
+    <!-- Main Content -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <h1>Vehicle Registry</h1>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </header>
+
+        <!-- Register Vehicle -->
+
+        <section class="trip-form-card">
+
+            <h2>Register New Vehicle</h2>
+
+            <form id="vehicleForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="registrationNumber">
+
+                            Registration Number
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="registrationNumber"
+                            placeholder="UP78 AB 1234"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="vehicleName">
+
+                            Vehicle Name / Model
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="vehicleName"
+                            placeholder="Tata Ace"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="vehicleType">
+
+                            Vehicle Type
+
+                        </label>
+
+                        <select
+                            id="vehicleType"
+                            required>
+
+                            <option value="">Select Type</option>
+
+                            <option>Truck</option>
+
+                            <option>Van</option>
+
+                            <option>Bus</option>
+
+                            <option>Mini Truck</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="capacity">
+
+                            Maximum Load (Kg)
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="capacity"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="odometer">
+
+                            Odometer (Km)
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="odometer"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="cost">
+
+                            Acquisition Cost (₹)
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="cost"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="vehicleStatus">
+
+                            Status
+
+                        </label>
+
+                        <select
+                            id="vehicleStatus"
+                            required>
+
+                            <option>Available</option>
+
+                            <option>On Trip</option>
+
+                            <option>In Shop</option>
+
+                            <option>Retired</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="primary-btn">
+
+                    Register Vehicle
+
+                </button>
+
+            </form>
+
+        </section>
+
+        <!-- Fleet Registry -->
+
+        <section class="table-card">
+
+            <div class="table-header">
+
+                <h2>Fleet Registry</h2>
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Registration</th>
+
+                        <th>Vehicle</th>
+
+                        <th>Type</th>
+
+                        <th>Capacity</th>
+
+                        <th>Odometer</th>
+
+                        <th>Status</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="vehicleTableBody">
+
+                    <!-- Dynamic Rows -->
+
+                </tbody>
+
+            </table>
+
+        </section>
+
+        <!-- ===========================
+             Maintenance Modal
+        ============================ -->
+
+        <div
+            id="maintenanceModal"
+            class="modal">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h2>
+
+                        Vehicle Maintenance
+
+                    </h2>
+
+                    <span
+                        class="close-modal"
+                        onclick="closeMaintenanceModal()">
+
+                        &times;
+
+                    </span>
+
+                </div>
+
+                <form id="maintenanceForm">
+
+                    <input
+                        type="hidden"
+                        id="maintenanceVehicleIndex">
+
+                    <div class="form-group">
+
+                        <label for="maintenanceType">
+
+                            Maintenance Type
+
+                        </label>
+
+                        <select
+                            id="maintenanceType"
+                            required>
+
+                            <option>
+
+                                Routine Service
+
+                            </option>
+
+                            <option>
+
+                                Engine Repair
+
+                            </option>
+
+                            <option>
+
+                                Brake Service
+
+                            </option>
+
+                            <option>
+
+                                Tyre Replacement
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="maintenanceCost">
+
+                            Estimated Cost
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="maintenanceCost"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="maintenanceNote">
+
+                            Notes
+
+                        </label>
+
+                        <textarea
+                            id="maintenanceNote"
+                            rows="4"></textarea>
+
+                    </div>
+
+                    <button
+                        class="primary-btn"
+                        type="submit">
+
+                        Save Maintenance
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="../assets/js/api.js"></script>
+
+    <script src="../assets/js/auth.js"></script>
+
+    <script src="../assets/js/utils.js"></script>
+
+    <script>
+
+        checkAuth();
+
+    </script>
+
+</body>
+
+</html>
