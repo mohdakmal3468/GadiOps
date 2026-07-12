@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GadiOps | Login</title>
+
+    <link rel="stylesheet" href="../assets/css/styles.css">
+
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <div class="logo">
+
+                <h1>🚛 GadiOps</h1>
+
+                <p>Smart Transport Operations Platform</p>
+
+            </div>
+
+            <form id="loginForm">
+
+                <div class="input-group">
+
+                    <label for="email">Email Address</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        autocomplete="email"
+                        required>
+
+                </div>
+
+                <div class="input-group">
+
+                    <label for="password">Password</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required>
+
+                </div>
+
+                <button
+                    type="submit"
+                    id="loginBtn">
+
+                    Login
+
+                </button>
+
+                <p id="errorMessage"></p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- JavaScript -->
+
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+
+</body>
+
+</html>
