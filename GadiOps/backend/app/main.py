@@ -11,6 +11,8 @@ from app.routers import drivers
 
 from app.routers import trips
 
+from app.routers import expenses
+
 
 # Create database tables automatically on startup (No need for heavy migrations like Alembic during a hackathon)
 Base.metadata.create_all(bind=engine)
@@ -59,3 +61,5 @@ app.include_router(vehicles.router, prefix="/api")
 app.include_router(drivers.router, prefix="/api")
 
 app.include_router(trips.router, prefix="/api")
+
+app.include_router(expenses.router, prefix="/api")
