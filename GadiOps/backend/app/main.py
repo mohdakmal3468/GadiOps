@@ -1,41 +1,25 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 from app.core.database import engine, Base
-# Add this import near the top of backend/app/main.py
-from app.routers import auth
-# Import the vehicle routing module
-from app.routers import vehicles
-# Import the driver routing module
-from app.routers import drivers
+import app.models  # Registers your database models layout
 
-from app.routers import trips
+# Import routing modules
+from app.routers import auth, vehicles, drivers, trips, expenses, dashboard
 
-from app.routers import expenses
-
-from app.routers import dashboard
-
-from fastapi import FastAPI
-from app.core.database import engine, Base
-import app.models  # Registers your newly cleaned models directory layout
-import os
-
-app = FastAPI(title="GadiOps API")
-
-# Safely reset any cached model states during hot-reloads
-Base.metadata.clear()
-
-# Rebuild all database tables cleanly
+# 1. Trigger database table creation cleanly
 Base.metadata.create_all(bind=engine)
 
-
+# 2. Initialize a single FastAPI instance
 app = FastAPI(
     title="GadiOps API",
     description="Smart Transport Operations Platform API",
     version="1.0.0"
 )
 
-# Configure CORS (Allows smooth API interaction)
+# 3. Configure CORS (Allows smooth API interaction)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -44,39 +28,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global Health Check Route
+# 4. Global Health Check Route
 @app.get("/api/health", tags=["System"])
 def health_check():
     return {"status": "healthy", "platform": "GadiOps"}
 
-# =====================================================================
-# ROUTERS IMPORT & REGISTRATION (Uncomment as you build them)
-# =====================================================================
-# from app.routers import auth, dashboard, vehicles, drivers, trips, expenses
-# app.include_router(auth.router, prefix="/api")
-# app.include_router(dashboard.router, prefix="/api")
-# app.include_router(vehicles.router, prefix="/api")
-# app.include_router(drivers.router, prefix="/api")
-# app.include_router(trips.router, prefix="/api")
-# app.include_router(expenses.router, prefix="/api")
-
-
-# Mount Frontend Assets (Serves index.html at root '/' and everything in frontend/)
-# Register the router inside backend/app/main.py (uncomment or add line)
+# 5. Register ALL API Routers (Must be registered BEFORE mounting frontend)
 app.include_router(auth.router, prefix="/api")
-# Always place this at the bottom so it doesn't hijack API route matching
+app.include_router(vehicles.router, prefix="/api")
+app.include_router(drivers.router, prefix="/api")
+app.include_router(trips.router, prefix="/api")
+app.include_router(expenses.router, prefix="/api")
+app.include_router(dashboard.router, prefix="/api")
+
+# 6. Mount Frontend Assets (ALWAYS place this at the very bottom)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # points to backend/
 FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "frontend"))
 
-app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
-# Mount inside the FastAPI instance structure
-app.include_router(vehicles.router, prefix="/api")
-
-# Mount inside the FastAPI instance structure
-app.include_router(drivers.router, prefix="/api")
-
-app.include_router(trips.router, prefix="/api")
-
-app.include_router(expenses.router, prefix="/api")
-
-app.include_router(dashboard.router, prefix="/api")
+if os.path.exists(FRONTEND_DIR):
+    app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")
+else:
+    print(f"Warning: Frontend directory not found at {FRONTEND_DIR}. Skipping static mount.")

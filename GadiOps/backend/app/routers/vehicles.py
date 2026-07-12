@@ -90,6 +90,7 @@ def update_vehicle(
         
     db.commit()
     db.refresh(vehicle)
+    db.refresh(vehicle)
     return vehicle
 
 # ==========================================
