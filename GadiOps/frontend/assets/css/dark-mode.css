@@ -1,0 +1,105 @@
+/* ==========================================
+   GadiOps Dark Mode
+========================================== */
+
+body.dark{
+
+    background:#0f172a;
+
+    color:#f8fafc;
+
+}
+
+body.dark .landing-page{
+
+    background:#020617;
+
+}
+
+body.dark .landing-card{
+
+    background:#1e293b;
+
+    color:#f8fafc;
+
+}
+
+body.dark .landing-card h1{
+
+    color:#60a5fa;
+
+}
+
+body.dark .landing-card p{
+
+    color:#d1d5db;
+
+}
+
+body.dark .sidebar{
+
+    background:#111827;
+
+}
+
+body.dark .main-content{
+
+    background:#0f172a;
+
+}
+
+body.dark .trip-form-card,
+body.dark .table-card,
+body.dark .trip-column,
+body.dark .kpi-card,
+body.dark .modal-content{
+
+    background:#1e293b;
+
+    color:#f8fafc;
+
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea{
+
+    background:#374151;
+
+    color:#ffffff;
+
+    border:1px solid #4b5563;
+
+}
+
+body.dark table{
+
+    color:#f8fafc;
+
+}
+
+body.dark .topbar{
+
+    background:#111827;
+
+}
+
+body.dark .sidebar a{
+
+    color:#d1d5db;
+
+}
+
+body.dark .sidebar a.active{
+
+    background:#2563eb;
+
+    color:#ffffff;
+
+}
+
+body.dark .status{
+
+    border:1px solid #475569;
+
+}
