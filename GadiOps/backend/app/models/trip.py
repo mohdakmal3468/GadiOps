@@ -8,6 +8,8 @@ from app.core.database import Base
 class Trip(Base):
     __tablename__ = "trips"
 
+    __table_args__ = {'extend_existing': True}
+
     id = Column(Integer, primary_key=True, index=True)
     source = Column(String, nullable=False)
     destination = Column(String, nullable=False)
@@ -22,6 +24,8 @@ class Trip(Base):
 
 class Trip(Base):
     __tablename__ = "trips"
+
+    __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
     source = Column(String, nullable=False)

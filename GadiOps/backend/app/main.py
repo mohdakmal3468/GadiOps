@@ -15,9 +15,18 @@ from app.routers import expenses
 
 from app.routers import dashboard
 
+from fastapi import FastAPI
+from app.core.database import engine, Base
+import app.models  # Registers your newly cleaned models directory layout
 
-# Create database tables automatically on startup (No need for heavy migrations like Alembic during a hackathon)
+app = FastAPI(title="GadiOps API")
+
+# Safely reset any cached model states during hot-reloads
+Base.metadata.clear()
+
+# Rebuild all database tables cleanly
 Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(
     title="GadiOps API",

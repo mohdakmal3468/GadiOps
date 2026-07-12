@@ -54,13 +54,10 @@ class AnalyticsService:
 
         return output.getvalue()
 
-class AnalyticsService:
-    # ... (Keep your existing get_dashboard_metrics here) ...
-
-    @staticmethod
-    def calculate_vehicle_roi(db: Session, vehicle_id: int) -> dict:
+@staticmethod
+def calculate_vehicle_roi(db: Session, vehicle_id: int) -> dict:
         """
-        Calculates financial ROI for an individual tracking asset based on the strict formula[cite: 1]:
+        Calculates financial ROI for an individual tracking asset based on the strict formula:
         ROI = (Revenue - (Maintenance + Fuel)) / Acquisition Cost
         """
         # 1. Gather the foundational asset information
@@ -68,7 +65,7 @@ class AnalyticsService:
         if not vehicle:
             return {"error": "Vehicle registry reference not found"}
 
-        # 2. Extract aggregate financial layers[cite: 1]
+        # 2. Extract aggregate financial layers
         total_revenue = db.query(func.sum(Trip.revenue)).filter(
             Trip.vehicle_id == vehicle_id, 
             Trip.status == "Completed"
@@ -82,25 +79,25 @@ class AnalyticsService:
             MaintenanceLog.vehicle_id == vehicle_id
         ).scalar() or 0.0
 
-        # 3. Compute the strict ROI Formula[cite: 1]
+        # 3. Compute the strict ROI Formula
         acquisition_cost = vehicle.acquisition_cost
-        net_profit = total_revenue - (total_maintenance + total_fuel)[cite: 1]
+        net_profit = total_revenue - (total_maintenance + total_fuel)
         
         # Guard against zero-division errors if sample dataset has bad data
         roi_ratio = 0.0
         if acquisition_cost > 0:
-            roi_ratio = net_profit / acquisition_cost[cite: 1]
+            roi_ratio = net_profit / acquisition_cost
 
         return {
             "vehicle_id": vehicle.id,
             "registration_number": vehicle.registration_number,
-            "acquisition_cost": acquisition_cost,[cite: 1]
-            "total_revenue": total_revenue,[cite: 1]
-            "total_fuel_cost": total_fuel,[cite: 1]
-            "total_maintenance_cost": total_maintenance,[cite: 1]
+            "acquisition_cost": acquisition_cost,
+            "total_revenue": total_revenue,
+            "total_fuel_cost": total_fuel,
+            "total_maintenance_cost": total_maintenance,
             "net_operational_profit": net_profit,
             "roi_ratio": round(roi_ratio, 4),               # Format for backend calculations (e.g., 0.1452)
-            "roi_percentage": f"{round(roi_ratio * 100, 2)}%" # Format for easier front-end presentation (e.g., "14.52%")
+            "roi_percentage": f"{round(roi_ratio * 100, 2)}%", # Format for easier front-end presentation (e.g., "14.52%")
         }
 
 class AnalyticsService:
@@ -110,7 +107,7 @@ class AnalyticsService:
         """
         Gathers database counts and calculates fleet utilization percentages.
         """
-        # 1. Fetch total counts of vehicles split by status[cite: 1]
+        # 1. Fetch total counts of vehicles split by status
         available_vehicles = db.query(Vehicle).filter(Vehicle.status == "Available").count()
         on_trip_vehicles = db.query(Vehicle).filter(Vehicle.status == "On Trip").count()
         in_shop_vehicles = db.query(Vehicle).filter(Vehicle.status == "In Shop").count()
@@ -118,24 +115,24 @@ class AnalyticsService:
         
         total_active_fleet = available_vehicles + on_trip_vehicles + in_shop_vehicles
         
-        # 2. Additional Prompt KPIs: Trips and Drivers[cite: 1]
+        # 2. Additional Prompt KPIs: Trips and Drivers
         active_trips = db.query(Trip).filter(Trip.status == "Dispatched").count()
         pending_trips = db.query(Trip).filter(Trip.status == "Draft").count()
         drivers_on_duty = db.query(Driver).filter(Driver.status == "On Trip").count()
 
-        # 3. Calculate Fleet Utilization (%) Formula[cite: 1]
+        # 3. Calculate Fleet Utilization (%) Formula
         # Utilization (%) = (Vehicles On Trip / Total Non-Retired Fleet) * 100
         fleet_utilization_pct = 0.0
         if total_active_fleet > 0:
             fleet_utilization_pct = round((on_trip_vehicles / total_active_fleet) * 100, 2)
 
         return {
-            "active_vehicles": on_trip_vehicles, # Current vehicles out on operations[cite: 1]
-            "available_vehicles": available_vehicles,[cite: 1]
-            "vehicles_in_maintenance": in_shop_vehicles,[cite: 1]
+            "active_vehicles": on_trip_vehicles, # Current vehicles out on operations
+            "available_vehicles": available_vehicles,
+            "vehicles_in_maintenance": in_shop_vehicles,
             "retired_vehicles": retired_vehicles,
-            "active_trips": active_trips,[cite: 1]
-            "pending_trips": pending_trips,[cite: 1]
-            "drivers_on_duty": drivers_on_duty,[cite: 1]
-            "fleet_utilization_percentage": fleet_utilization_pct[cite: 1]
+            "active_trips": active_trips,
+            "pending_trips": pending_trips,
+            "drivers_on_duty": drivers_on_duty,
+            "fleet_utilization_percentage": fleet_utilization_pct
         }
